@@ -29,3 +29,28 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+const header = document.querySelector('header');
+const allSections = document.querySelectorAll('.sections');
+const allButtons = document.getElementsByTagName('button');
+
+const message = document.createElement('div');
+message.classList.add('cookie-message');
+
+message.innerHTML =
+  'We use cookied for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
+
+header.append(message);
+
+message.style.backgroundColor = '#37383d';
+message.style.width = '120%';
+message.style.height =
+  Number.parseFloat(getComputedStyle(message).height) + 30 + 'px';
+
+document
+  .querySelector('.btn--close-cookie')
+  .addEventListener('click', function () {
+    message.remove();
+  });
+
+document.documentElement.style.setProperty('--color-primary', 'purple');
