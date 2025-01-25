@@ -8,7 +8,7 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header');
-const allSections = document.querySelectorAll('.sections');
+const allSections = document.querySelectorAll('.section');
 const allButtons = document.getElementsByTagName('button');
 const section1 = document.querySelector('#section--1');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
@@ -108,8 +108,40 @@ nav.addEventListener('mouseout', fading.bind(1));
 
 // sticky nav
 
-const oberver = new IntersectionObserver();
-oberver.observe();
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function (entries) {
+  //entries is the threshold we defined. it can be an array as well
+  const [entry] = entries; //same as entry=entires[0]
+
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+const oberver = new IntersectionObserver(stickyNav, {
+  root: null, //the thing to which the oberver will be intersecting.Here it in null cause we want to get result for the entire window
+  threshold: 0, // set this to how much are we want for the function to be triggered. 0 means as soon as it starts or end,  0.1(10%)means when 10% of the area is in view
+  rootMargin: `-${navHeight}px`, // margin set at which the intersection should happen. here it is -ive cause we want the margin before
+});
+oberver.observe(header);
+
+//revealing elements on scroll
+const sectionAppear = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(sectionAppear, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
 //Other work
 /*
 const message = document.createElement('div');
