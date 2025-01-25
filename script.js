@@ -126,12 +126,13 @@ oberver.observe(header);
 
 //revealing elements on scroll
 const sectionAppear = function (entries, observer) {
-  const [entry] = entries;
+  //looping over each entry to ensure it loads even if we are between two section and reload.
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
 
-  if (!entry.isIntersecting) return;
-
-  entry.target.classList.remove('section--hidden');
-  observer.unobserve(entry.target);
+    entry.target.classList.remove('section--hidden');
+    observer.unobserve(entry.target);
+  });
 };
 const sectionObserver = new IntersectionObserver(sectionAppear, {
   root: null,
